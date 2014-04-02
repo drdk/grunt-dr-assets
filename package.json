@@ -1,0 +1,25 @@
+{
+  "name": "grunt-dr-assets",
+  "version": "6.0.0",
+  "description": "DR Assets",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "(c) 2014 the Danish Broadcasting Corporation. All rights reserved.",
+  "author": "",
+  "peerDependencies": {
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt": "^0.4.4",
+    "lodash": "^2.4.1",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-csscomb": "^2.0.1",
+    "assemble-less": "^0.7.0"
+  },
+  "dependencies": {
+    "bootstrap": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/bootstrap.git",
+    "GlobalAssets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/global-assets.git"
+  },
+  "readme": "ERROR: No README data found!"
+}

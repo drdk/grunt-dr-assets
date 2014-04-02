@@ -1,0 +1,72 @@
+{
+  "bootstrap-mixins": {
+    "cwd": "/less/",
+    "compile": false,
+    "files": [
+      "mixins/*.less",
+      "mixins.less"
+    ],
+    "dest": "less/bootstrap/"
+  },
+  "bootstrap-components": {
+    "cwd": "/less/",
+    "compile": {
+      "dest": "css/components/bootstrap"
+    },
+    "files": [
+    ],
+    "dest": "less/bootstrap/components/"
+  },
+  "bootstrap-core": {
+    "cwd": "/less/",
+    "compile": false,
+    "files": [
+      "mixins/*.less",
+      "mixins.less",
+      "normalize.less",
+      "print.less",
+      "scaffolding.less",
+      "type.less",
+      "grid.less",
+      "navs.less",
+      "navbar.less",
+      "labels.less",
+      "responsive-embed.less",
+      "utilities.less",
+      "responsive-utilities.less"
+    ],
+    "dest": "less/bootstrap/"
+  },
+  "dr-mixins": {
+    "cwd": "/less/",
+    "compile": false,
+    "files": [
+      "mixins/*.less", 
+      "mixins.less", 
+      "variables.less"
+    ],
+    "dest": "less/dr/"
+  },
+  "dr-components": {
+    "cwd": "/less/components/",
+    "compile": {
+      "dest": "css/components/dr"
+    },
+    "files": "**/*.less",
+    "dest": "less/dr/components/"
+  },
+  "dr-core": {
+    "cwd": "/less/",
+    "compile": {
+      "dest": "css/core.css"
+    },
+    "files": ["mixins/*.less", "*.less"],
+    "dest": "less/dr/"
+  },
+  "dr-build": {
+    "cwd": "/less/build-files/",
+    "compile": false,
+    "files": ["dr-include.less", ".csscomb.json"],
+    "dest": "less/"
+  }
+}
