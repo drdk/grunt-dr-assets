@@ -28,7 +28,7 @@ module.exports = (grunt) ->
 
     # Set defaults
     config.options = _.defaults config.options, 
-      tempPath            : "tmp-build/"
+      tempPath            : "dr-global-tmp/"
       drStylesPath        : taskPath + "/node_modules/GlobalAssets/src/DR.GlobalAssets.Web/css/006"
       bootstrapPath       : taskPath + "/node_modules/bootstrap"
       buildCoreCSS        : false
@@ -52,6 +52,7 @@ module.exports = (grunt) ->
 
     # Read and set vars for running the tasks
     runTasks                = ["bootstrap-mixins", "dr-mixins"]
+    compileFiles            = []
     bootstrapComponentFiles = []
     bootstrapMixinFiles     = stylesConfig["bootstrap-mixins"].files
     bootstrapCoreFiles      = stylesConfig["bootstrap-core"].files
@@ -86,6 +87,10 @@ module.exports = (grunt) ->
 
     if config.options.includeBuildFiles
       runTasks.push("dr-build")
+
+    if config.options.cleanBeforeBuild
+      for name, settings of stylesConfig
+        compileFiles.push dest + stylesConfig[name].compile.dest if stylesConfig[name].compile
 
     # Set task config
     taskConfigs =
@@ -134,7 +139,7 @@ module.exports = (grunt) ->
             dest    : dest + stylesConfig["dr-build"].dest
 
       "dr-styles-clean": 
-          all: [dest + "bootstrap", dest + "dr"]
+          all: compileFiles
           temp: [dest + tempPath]
 
       "dr-styles-less":
@@ -235,18 +240,18 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks('grunt-csscomb')
     grunt.renameTask('csscomb', 'dr-styles-csscomb')
 
-    for name, settings of taskConfigs
-      grunt.config.set name, settings
-
-    if config.options.cleanBeforeBuild
-      grunt.task.run("dr-styles-clean:all") 
-
     # Run the relevant tasks
     if runTasks.length > 0
-      copyTasks    = []
-      compileTasks = []
-      resortTasks  = []
-      
+      copyTasks         = []
+      compileTasks      = []
+      resortTasks       = []
+    
+      for name, settings of taskConfigs
+        grunt.config.set name, settings
+
+      if config.options.cleanBeforeBuild
+        grunt.task.run("dr-styles-clean:all") 
+
       for task in runTasks
         # Run copy tasks
         copyTasks.push "dr-styles-copy:" + task
@@ -263,4 +268,3 @@ module.exports = (grunt) ->
     else
       # No tasks were defined
       grunt.fail.warn "Not running any tasks."
-

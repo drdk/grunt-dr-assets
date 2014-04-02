@@ -11,7 +11,7 @@
   "bootstrap-components": {
     "cwd": "/less/",
     "compile": {
-      "dest": "css/components/bootstrap"
+      "dest": "css/dr-global-components/bootstrap"
     },
     "files": [
     ],
@@ -50,7 +50,7 @@
   "dr-components": {
     "cwd": "/less/components/",
     "compile": {
-      "dest": "css/components/dr"
+      "dest": "css/dr-global-components/dr"
     },
     "files": "**/*.less",
     "dest": "less/dr/components/"
@@ -58,7 +58,7 @@
   "dr-core": {
     "cwd": "/less/",
     "compile": {
-      "dest": "css/core.css"
+      "dest": "css/dr-global-core.css"
     },
     "files": ["mixins/*.less", "*.less"],
     "dest": "less/dr/"
