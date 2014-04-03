@@ -268,8 +268,6 @@ module.exports = (grunt) ->
       if config.options.cleanBeforeBuild
         grunt.task.run("dr-styles-clean:all") 
 
-      return
-
       for task in runTasks
         # Run copy tasks
         copyTasks.push "dr-styles-copy:" + task
