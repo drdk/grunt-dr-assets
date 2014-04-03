@@ -2,7 +2,7 @@
 
 module.exports = (grunt) ->
 
-  grunt.registerTask "styles", "Builds DR LESS and CSS files", ->
+  grunt.registerTask "dr-assets-styles", "Builds DR LESS and CSS files", ->
 
     configRootProperty = "dr-assets"
 
@@ -61,6 +61,11 @@ module.exports = (grunt) ->
       config.options.compilePaths.less = config.options.rootPath + "less/" if not config.options.compilePaths.less?
     else
       config.options.compilePaths.less = config.options.compilePaths.less + "/" if config.options.compilePaths.less.substr(-1) isnt "/"
+
+    # Only build if it doesnt exist?
+    if config.options.skipIfExists
+      if fs.existsSync(config.options.compilePaths.css) and fs.existsSync(config.options.compilePaths.less)
+        return grunt.log.ok('Skipping build as the following paths already exists: ' + config.options.compilePaths.css + ', ' + config.options.compilePaths.less)
 
     # Read and set vars for running the tasks
     runTasks                = ["bootstrap-mixins", "dr-mixins"]
