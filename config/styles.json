@@ -1,6 +1,6 @@
 {
   "bootstrap-mixins": {
-    "cwd": "/less/",
+    "cwd": "/",
     "compile": false,
     "files": [
       "mixins/*.less",
@@ -9,7 +9,7 @@
     "dest": "bootstrap/"
   },
   "bootstrap-components": {
-    "cwd": "/less/",
+    "cwd": "/",
     "compile": {
       "dest": "dr-global-components/bootstrap"
     },
@@ -18,7 +18,7 @@
     "dest": "bootstrap/components/"
   },
   "bootstrap-core": {
-    "cwd": "/less/",
+    "cwd": "/",
     "compile": false,
     "files": [
       "mixins/*.less",
@@ -30,7 +30,6 @@
       "grid.less",
       "navs.less",
       "navbar.less",
-      "labels.less",
       "responsive-embed.less",
       "utilities.less",
       "responsive-utilities.less"
@@ -58,7 +57,7 @@
   "dr-core": {
     "cwd": "/",
     "compile": {
-      "dest": "dr-global-core.css"
+      "dest": "core.css"
     },
     "files": [
       "mixins/*.less",

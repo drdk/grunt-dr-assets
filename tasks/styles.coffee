@@ -28,10 +28,10 @@ module.exports = (grunt) ->
 
     # Set the other default values
     config.options = _.defaults config.options, 
-      tempPath            : "dr-global-tmp/"
+      tempPath            : "dr-assets-tmp/"
       compilePaths        : {}
-      drStylesPath        : taskPath + "/node_modules/GlobalAssets/src/DR.GlobalAssets.Web/css/006"
-      bootstrapPath       : taskPath + "/node_modules/bootstrap"
+      drStylesPath        : taskPath + "/node_modules/dr-assets/less"
+      bootstrapPath       : taskPath + "/node_modules/dr-assets/node_modules/bootstrap/less"
       buildCoreCSS        : false
       cleanBeforeBuild    : false
       concatFiles         : false
@@ -80,7 +80,7 @@ module.exports = (grunt) ->
     tempPath                = config.options.tempPath
 
     # Add Bootstrap Components
-    if config.bootstrapComponents? and config.bootstrapComponents.length > 0
+    if config.options.bootstrapComponents.length > 0
       # Make sure the user isn't trying to include all bootstrap files!
       if config.bootstrapComponents.indexOf("*") isnt -1 or config.bootstrapComponents.indexOf("**/*") isnt -1
         grunt.fail.warn('An error occured. Forbidden path (* or */**). Only choose the necessary task files. Btw, mixins are always included.')
@@ -94,12 +94,15 @@ module.exports = (grunt) ->
       runTasks.push("bootstrap-components")
 
     # Add DR Components
-    if config.drComponents.length > 0
+    if config.options.drComponents.length > 0
       drComponentFiles.push file + ".less" for file in config.drComponents
       runTasks.push("dr-components")
 
     # Should we build core.css?
     if config.options.buildCoreCSS
+      logosPath = config.options.compilePaths.css + "../shared/dr-logos.less"
+      if not fs.existsSync(logosPath)
+        grunt.fail.warn('An error occured. Could not find logos.less at ' + logosPath + ' . This type of build is only for global-assets.')
       runTasks.push("bootstrap-core", "dr-core")
 
     if config.options.includeBuildFiles
