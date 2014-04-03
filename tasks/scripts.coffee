@@ -2,7 +2,7 @@
 
 module.exports = (grunt) ->
 
-  grunt.registerTask "dr-assets-scripts", "Builds DR Script files", ->
+  grunt.registerTask "scripts", "Builds DR Script files", ->
 
     config = grunt.config.get("dr-assets")[@name]
 

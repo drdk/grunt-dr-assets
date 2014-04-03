@@ -9,11 +9,11 @@ module.exports = (grunt) ->
     switch @target
       when "styles"
         grunt.log.writeln("Starting styles subtasks")
-        grunt.task.run("dr-assets-styles")
+        grunt.task.run("styles")
     
       when "scripts"
         grunt.log.writeln("Starting scripts subtasks")
-        grunt.task.run("dr-assets-scripts")
+        grunt.task.run("scripts")
     
       else
         grunt.fail.warn "Failed. No tasks were recognized."

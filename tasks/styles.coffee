@@ -2,7 +2,7 @@
 
 module.exports = (grunt) ->
 
-  grunt.registerTask "dr-assets-styles", "Builds DR LESS and CSS files", ->
+  grunt.registerTask "styles", "Builds DR LESS and CSS files", ->
 
     configRootProperty = "dr-assets"
 
