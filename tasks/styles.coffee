@@ -2,7 +2,7 @@
 
 module.exports = (grunt) ->
 
-  grunt.registerTask "styles", "Builds DR LESS and CSS files", ->
+  grunt.registerTask "styles", "Builds DR LESS and CSS files", (env) ->
 
     configRootProperty = "dr-assets"
 
@@ -26,13 +26,18 @@ module.exports = (grunt) ->
     # Make sure root path has ending slash
     config.options.rootPath = config.options.rootPath + "/" if config.options.rootPath.substr(-1) isnt "/"
 
+    # Read environment variables
+    if env? and env is "dev"
+      config.options.compressCSS = false
+    else
+      config.options.compressCSS = true
+
     # Set the other default values
     config.options = _.defaults config.options, 
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
       drStylesPath        : taskPath + "/node_modules/dr-assets/less"
       bootstrapPath       : taskPath + "/node_modules/dr-assets/node_modules/bootstrap/less"
-      compressCSS         : true
       buildMixins         : true
       buildCoreCSS        : false
       cleanBeforeBuild    : false
