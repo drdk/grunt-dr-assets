@@ -1,7 +1,7 @@
 {
-  "name": "grunt-dr-local-assets",
+  "name": "grunt-dr-assets",
   "version": "1.0.0",
-  "description": "DR Local Assets",
+  "description": "DR Assets",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "assemble-less": "^0.7.0"
   },
   "dependencies": {
-    "dr-local-assets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/dr-local-assets.git"
+    "dr-local-assets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/dr-assets.git"
   },
   "readme": "ERROR: No README data found!"
 }
