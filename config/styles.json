@@ -1,6 +1,6 @@
 {
   "bootstrap-mixins": {
-    "cwd": "/",
+    "cwd": "/less/",
     "compile": false,
     "files": [
       "mixins/*.less",
@@ -9,7 +9,7 @@
     "dest": "less/bootstrap/"
   },
   "bootstrap-components": {
-    "cwd": "/",
+    "cwd": "/less/",
     "compile": {
       "dest": "css/dr-global-components/bootstrap"
     },
@@ -18,7 +18,7 @@
     "dest": "less/bootstrap/components/"
   },
   "bootstrap-core": {
-    "cwd": "/",
+    "cwd": "/less/",
     "compile": false,
     "files": [
       "mixins/*.less",
