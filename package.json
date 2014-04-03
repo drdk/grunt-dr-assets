@@ -14,7 +14,8 @@
     "lodash": "^2.4.1",
     "grunt-contrib-clean": "^0.5.0",
     "grunt-csscomb": "^2.0.1",
-    "assemble-less": "^0.7.0"
+    "assemble-less": "^0.7.0",
+    "coffee-script": "^1.7.1"
   },
   "dependencies": {
     "dr-local-assets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/dr-assets.git"

@@ -32,6 +32,7 @@ module.exports = (grunt) ->
       compilePaths        : {}
       drStylesPath        : taskPath + "/node_modules/dr-assets/less"
       bootstrapPath       : taskPath + "/node_modules/dr-assets/node_modules/bootstrap/less"
+      compressCSS         : true
       buildMixins         : true
       buildCoreCSS        : false
       cleanBeforeBuild    : false
@@ -176,6 +177,8 @@ module.exports = (grunt) ->
           options: 
             ieCompat: true
             strictMath: true
+            sourceMap: false
+            cleancss: config.options.compressCSS
             paths: [config.options.compilePaths.less]
             imports: 
               reference: ["dr-include.less"]
@@ -191,6 +194,8 @@ module.exports = (grunt) ->
           options: 
             ieCompat: true
             strictMath: true
+            sourceMap: false
+            cleancss: config.options.compressCSS
             paths: [config.options.compilePaths.less]
             imports: 
               reference: ["dr-include.less"]
@@ -206,11 +211,15 @@ module.exports = (grunt) ->
           options:
             strictMath: true
             sourceMap: false
-            cleancss: true
+            cleancss: config.options.compressCSS
             expand: true
             flatten: false
             stripBanners: true
             ieCompat: true
+            stripBanners: 
+              options:
+                block: true
+                line: true
           src: tempPath + stylesConfig["dr-core"].dest + "core.less"
           dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
 
