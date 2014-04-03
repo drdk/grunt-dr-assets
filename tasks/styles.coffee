@@ -214,9 +214,8 @@ module.exports = (grunt) ->
             cleancss: config.options.compressCSS
             expand: true
             flatten: false
-            stripBanners: true
             ieCompat: true
-            stripBanners: 
+            stripBanners:
               options:
                 block: true
                 line: true
