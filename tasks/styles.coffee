@@ -23,12 +23,13 @@ module.exports = (grunt) ->
     # Reference config settings
     config = grunt.config.get(configRootProperty)[@name]
 
-    # Make sure rootPath has ending slash
-    dest = if config.options.rootPath.substr(-1) is "/" then config.options.rootPath else config.options.rootPath + "/"
+    # Make sure root path has ending slash
+    config.options.rootPath = config.options.rootPath + "/" if config.options.rootPath.substr(-1) isnt "/"
 
-    # Set defaults
+    # Set the other default values
     config.options = _.defaults config.options, 
       tempPath            : "dr-global-tmp/"
+      compilePaths        : {}
       drStylesPath        : taskPath + "/node_modules/GlobalAssets/src/DR.GlobalAssets.Web/css/006"
       bootstrapPath       : taskPath + "/node_modules/bootstrap"
       buildCoreCSS        : false
@@ -49,6 +50,17 @@ module.exports = (grunt) ->
     # Load styles config file
     stylesConfig = grunt.file.readJSON(taskPath + "/config/styles.json")
     if not stylesConfig? then grunt.fail.warn('An error occured. Config (config/styles.json) was not found.')
+
+    # Define paths
+    if not config.options.compilePaths.css?
+      config.options.compilePaths.css  = config.options.rootPath + "css/" 
+    else
+      config.options.compilePaths.css = config.options.compilePaths.css + "/" if config.options.compilePaths.css.substr(-1) isnt "/"
+
+    if not config.options.compilePaths.less?
+      config.options.compilePaths.less = config.options.rootPath + "less/" if not config.options.compilePaths.less?
+    else
+      config.options.compilePaths.less = config.options.compilePaths.less + "/" if config.options.compilePaths.less.substr(-1) isnt "/"
 
     # Read and set vars for running the tasks
     runTasks                = ["bootstrap-mixins", "dr-mixins"]
@@ -90,7 +102,11 @@ module.exports = (grunt) ->
 
     if config.options.cleanBeforeBuild
       for name, settings of stylesConfig
-        compileFiles.push dest + stylesConfig[name].compile.dest if stylesConfig[name].compile
+        if stylesConfig[name].compile
+          compileFiles.push config.options.compilePaths.css + stylesConfig[name].compile.dest 
+          compileFiles.push config.options.compilePaths.css + stylesConfig[name].compile.dest.split("/")[0]
+        compileFiles.push config.options.compilePaths.less + stylesConfig[name].dest if stylesConfig[name].dest.length > 0
+      compileFiles.push config.options.compilePaths.less + drBuildFile for drBuildFile in drBuildFiles 
 
     # Set task config
     taskConfigs =
@@ -99,62 +115,62 @@ module.exports = (grunt) ->
             expand  : true
             cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-mixins"].cwd
             src     : bootstrapMixinFiles
-            dest    : dest + stylesConfig["bootstrap-mixins"].dest
+            dest    : config.options.compilePaths.less + stylesConfig["bootstrap-mixins"].dest
 
           "bootstrap-components":
             expand  : true
             cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-components"].cwd
             src     : bootstrapComponentFiles
-            dest    : dest + tempPath + stylesConfig["bootstrap-components"].dest
+            dest    : tempPath + stylesConfig["bootstrap-components"].dest
 
           "bootstrap-core":
             expand  : true
             cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-core"].cwd
             src     : bootstrapCoreFiles
-            dest    : dest + tempPath + stylesConfig["bootstrap-core"].dest
+            dest    : tempPath + stylesConfig["bootstrap-core"].dest
 
           "dr-mixins":
             expand  : true
             cwd     : config.options.drStylesPath + stylesConfig["dr-mixins"].cwd
             src     : drMixinFiles
-            dest    : dest + stylesConfig["dr-mixins"].dest
+            dest    : config.options.compilePaths.less + stylesConfig["dr-mixins"].dest
       
           "dr-components":
             nonull: true
             expand  : true
             cwd     : config.options.drStylesPath + stylesConfig["dr-components"].cwd
             src     : drComponentFiles
-            dest    : dest + tempPath + stylesConfig["dr-components"].dest
+            dest    : tempPath + stylesConfig["dr-components"].dest
 
           "dr-core":
             expand  : true
             cwd     : config.options.drStylesPath + stylesConfig["dr-core"].cwd
             src     : drCoreFiles
-            dest    : dest + tempPath + stylesConfig["dr-core"].dest
+            dest    : tempPath + stylesConfig["dr-core"].dest
 
           "dr-build":
             expand  : true
             cwd     : config.options.drStylesPath + stylesConfig["dr-build"].cwd
             src     : drBuildFiles
-            dest    : dest + stylesConfig["dr-build"].dest
+            dest    : config.options.compilePaths.less + stylesConfig["dr-build"].dest
 
       "dr-styles-clean": 
           all: compileFiles
-          temp: [dest + tempPath]
+          temp: [tempPath]
 
       "dr-styles-less":
         "bootstrap-components":
           options: 
             ieCompat: true
             strictMath: true
-            paths: ["assets/less"]
+            paths: [config.options.compilePaths.less]
             imports: 
               reference: ["dr-include.less"]
           files: [
             expand: true
-            cwd: dest + tempPath + stylesConfig["bootstrap-components"].dest
+            cwd: tempPath + stylesConfig["bootstrap-components"].dest
             src: bootstrapComponentFiles
-            dest: dest + stylesConfig["bootstrap-components"].compile.dest
+            dest: config.options.compilePaths.css + stylesConfig["bootstrap-components"].compile.dest
             ext: ".css"
           ]
 
@@ -162,14 +178,14 @@ module.exports = (grunt) ->
           options: 
             ieCompat: true
             strictMath: true
-            paths: [dest + "less"]
+            paths: [config.options.compilePaths.less]
             imports: 
               reference: ["dr-include.less"]
           files: [
             expand: true
-            cwd: dest + tempPath + stylesConfig["dr-components"].dest
+            cwd: tempPath + stylesConfig["dr-components"].dest
             src: drComponentFiles
-            dest: dest + stylesConfig["dr-components"].compile.dest
+            dest: config.options.compilePaths.css + stylesConfig["dr-components"].compile.dest
             ext: ".css"
           ]
 
@@ -182,46 +198,46 @@ module.exports = (grunt) ->
             flatten: false
             stripBanners: true
             ieCompat: true
-          src: dest + tempPath + stylesConfig["dr-core"].dest + "core.less"
-          dest: dest + stylesConfig["dr-core"].compile.dest
+          src: tempPath + stylesConfig["dr-core"].dest + "core.less"
+          dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
 
       "dr-styles-csscomb":
         "bootstrap-components":
           options:
-            config: dest + stylesConfig["dr-build"].dest + ".csscomb.json"
+            config: config.options.rootPath + stylesConfig["dr-build"].dest + ".csscomb.json"
           files: [
             expand: true
-            cwd: dest + stylesConfig["bootstrap-components"].compile.dest
+            cwd: config.options.rootPath + stylesConfig["bootstrap-components"].compile.dest
             src: "**/*.css"
-            dest: dest + stylesConfig["bootstrap-components"].compile.dest
+            dest: config.options.compilePaths.css + stylesConfig["bootstrap-components"].compile.dest
           ]
 
         "dr-components":
           options:
-            config: dest + stylesConfig["dr-build"].dest + ".csscomb.json"
+            config: config.options.rootPath + stylesConfig["dr-build"].dest + ".csscomb.json"
           files: [
             expand: true
-            cwd: dest + stylesConfig["dr-components"].compile.dest
+            cwd: config.options.rootPath + stylesConfig["dr-components"].compile.dest
             src: "**/*.css"
-            dest: dest + stylesConfig["dr-components"].compile.dest
+            dest: config.options.compilePaths.css + stylesConfig["dr-components"].compile.dest
           ]
 
         "dr-core":
           options:
-            config: dest + stylesConfig["dr-build"].dest + ".csscomb.json"
+            config: config.options.rootPath + stylesConfig["dr-build"].dest + ".csscomb.json"
           files: [
             expand: true
-            cwd: dest + stylesConfig["dr-core"].compile.dest
+            cwd: config.options.rootPath + stylesConfig["dr-core"].compile.dest
             src: "**/*.css"
-            dest: dest + stylesConfig["dr-core"].compile.dest
+            dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
           ]
 
     concatLessFiles = (subtask, componentFiles) =>
       return if not subtask? or not componentFiles?
       taskConfigs["dr-styles-less"][subtask].files = {}
       componentSrcFiles = []
-      componentSrcFiles.push dest + tempPath + stylesConfig[subtask].dest + componentFile for componentFile in componentFiles
-      taskConfigs["dr-styles-less"][subtask].files[dest + stylesConfig[subtask].compile.dest + '/' + subtask + '.css'] = componentSrcFiles
+      componentSrcFiles.push tempPath + stylesConfig[subtask].dest + componentFile for componentFile in componentFiles
+      taskConfigs["dr-styles-less"][subtask].files[config.options.compilePaths.css + stylesConfig[subtask].compile.dest + '/' + subtask + '.css'] = componentSrcFiles
   
     if config.options.concatFiles
       concatLessFiles("bootstrap-components", bootstrapComponentFiles)
@@ -251,6 +267,8 @@ module.exports = (grunt) ->
 
       if config.options.cleanBeforeBuild
         grunt.task.run("dr-styles-clean:all") 
+
+      return
 
       for task in runTasks
         # Run copy tasks
