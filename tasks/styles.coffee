@@ -33,7 +33,7 @@ module.exports = (grunt) ->
       drStylesPath        : taskPath + "/node_modules/GlobalAssets/src/DR.GlobalAssets.Web/css/006"
       bootstrapPath       : taskPath + "/node_modules/bootstrap"
       buildCoreCSS        : false
-      cleanBeforeBuild    : true
+      cleanBeforeBuild    : false
       concatFiles         : false
       includeBuildFiles   : true
       bootstrapComponents : []
