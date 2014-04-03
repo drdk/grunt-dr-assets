@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "bootstrap": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/bootstrap.git",
-    "GlobalAssets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/global-assets.git"
+    "GlobalAssets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/global-assets.git#feature-006"
   },
   "readme": "ERROR: No README data found!"
 }
