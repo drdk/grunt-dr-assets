@@ -28,7 +28,7 @@ module.exports = (grunt) ->
 
     # Set the other default values
     config.options = _.defaults config.options, 
-      tempPath            : "dr-assets-tmp/"
+      tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
       drStylesPath        : taskPath + "/node_modules/dr-assets/less"
       bootstrapPath       : taskPath + "/node_modules/dr-assets/node_modules/bootstrap/less"
