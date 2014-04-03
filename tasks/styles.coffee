@@ -32,10 +32,11 @@ module.exports = (grunt) ->
       compilePaths        : {}
       drStylesPath        : taskPath + "/node_modules/dr-assets/less"
       bootstrapPath       : taskPath + "/node_modules/dr-assets/node_modules/bootstrap/less"
+      buildMixins         : true
       buildCoreCSS        : false
       cleanBeforeBuild    : false
       concatFiles         : false
-      includeBuildFiles   : true
+      includeBuildFiles   : false
       bootstrapComponents : []
       drComponents        : []
 
@@ -68,7 +69,7 @@ module.exports = (grunt) ->
         return grunt.log.ok('Skipping build as the following paths already exists: ' + config.options.compilePaths.css + ', ' + config.options.compilePaths.less)
 
     # Read and set vars for running the tasks
-    runTasks                = ["bootstrap-mixins", "dr-mixins"]
+    runTasks                = []
     compileFiles            = []
     bootstrapComponentFiles = []
     bootstrapMixinFiles     = stylesConfig["bootstrap-mixins"].files
@@ -78,6 +79,10 @@ module.exports = (grunt) ->
     drCoreFiles             = stylesConfig["dr-core"].files
     drBuildFiles            = stylesConfig["dr-build"].files
     tempPath                = config.options.tempPath
+
+    # Add LESS files
+    if config.options.buildMixins
+      runTasks.push("bootstrap-mixins", "dr-mixins")
 
     # Add Bootstrap Components
     if config.options.bootstrapComponents.length > 0
