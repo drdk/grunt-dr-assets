@@ -28,6 +28,7 @@
       "scaffolding.less",
       "type.less",
       "grid.less",
+      "forms.less",
       "navs.less",
       "navbar.less",
       "responsive-embed.less",
