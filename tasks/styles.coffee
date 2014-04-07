@@ -27,7 +27,7 @@ module.exports = (grunt) ->
     config.options.rootPath = config.options.rootPath + "/" if config.options.rootPath.substr(-1) isnt "/"
 
     # Read environment variables
-    if env? and env is "dev"
+    if env? and env is "development"
       config.options.compressCSS = false
     else
       config.options.compressCSS = true
