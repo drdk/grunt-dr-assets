@@ -89,6 +89,9 @@ module.exports = (grunt) ->
     # Add LESS files
     if config.options.buildMixins
       runTasks.push("bootstrap-mixins", "dr-mixins")
+    else
+      if config.bootstrapComponents? or config.drComponents?
+        grunt.fail.warn('An error occured. Cannot build components when `buildMixins` is false. Set this to true to enable components.') 
 
     # Add Bootstrap Components
     if config.bootstrapComponents? and _.isArray(config.bootstrapComponents) and config.bootstrapComponents.length > 0
@@ -184,7 +187,7 @@ module.exports = (grunt) ->
             strictMath: true
             sourceMap: false
             cleancss: config.options.compressCSS
-            paths: [tempPath]
+            paths: [config.options.compilePaths.less]
             imports: 
               reference: ["dr/variables.less", "bootstrap/mixins.less"]
           files: [
@@ -201,7 +204,7 @@ module.exports = (grunt) ->
             strictMath: true
             sourceMap: false
             cleancss: config.options.compressCSS
-            paths: [tempPath]
+            paths: [config.options.compilePaths.less]
             imports: 
               reference: ["dr/variables.less", "bootstrap/mixins.less", "dr/mixins.less"]
           files: [
@@ -306,7 +309,7 @@ module.exports = (grunt) ->
       grunt.task.run(copyTasks) 
       grunt.task.run(compileTasks) 
       grunt.task.run(resortTasks) 
-      grunt.task.run("dr-styles-clean:temp")
+      #grunt.task.run("dr-styles-clean:temp")
     else
       # No tasks were defined
       grunt.fail.warn "Not running any tasks."
