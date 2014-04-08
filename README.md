@@ -93,7 +93,6 @@ grunt.initConfig({
         cleanBeforeBuild: true,
         concatFiles: false,
         includeBuildFiles: true,
-        buildCoreCSS: true,
         skipIfExists: true
       },
       bootstrapComponents: ["alerts", "forms", "carousel"],
