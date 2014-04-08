@@ -91,7 +91,7 @@ module.exports = (grunt) ->
       runTasks.push("bootstrap-mixins", "dr-mixins")
 
     # Add Bootstrap Components
-    if config.options.bootstrapComponents.length > 0
+    if config.bootstrapComponents? and _.isArray(config.bootstrapComponents) and config.bootstrapComponents.length > 0
       # Make sure the user isn't trying to include all bootstrap files!
       if config.bootstrapComponents.indexOf("*") isnt -1 or config.bootstrapComponents.indexOf("**/*") isnt -1
         grunt.fail.warn('An error occured. Forbidden path (* or */**). Only choose the necessary task files. Btw, mixins are always included.')
@@ -105,7 +105,7 @@ module.exports = (grunt) ->
       runTasks.push("bootstrap-components")
 
     # Add DR Components
-    if config.options.drComponents.length > 0
+    if config.drComponents? and _.isArray(config.drComponents) and config.drComponents.length > 0
       drComponentFiles.push file + ".less" for file in config.drComponents
       runTasks.push("dr-components")
 
@@ -184,9 +184,9 @@ module.exports = (grunt) ->
             strictMath: true
             sourceMap: false
             cleancss: config.options.compressCSS
-            paths: [config.options.compilePaths.less]
+            paths: [tempPath]
             imports: 
-              reference: ["dr-include.less"]
+              reference: ["dr/variables.less", "bootstrap/mixins.less"]
           files: [
             expand: true
             cwd: tempPath + stylesConfig["bootstrap-components"].dest
@@ -201,9 +201,9 @@ module.exports = (grunt) ->
             strictMath: true
             sourceMap: false
             cleancss: config.options.compressCSS
-            paths: [config.options.compilePaths.less]
+            paths: [tempPath]
             imports: 
-              reference: ["dr-include.less"]
+              reference: ["dr/variables.less", "bootstrap/mixins.less", "dr/mixins.less"]
           files: [
             expand: true
             cwd: tempPath + stylesConfig["dr-components"].dest
