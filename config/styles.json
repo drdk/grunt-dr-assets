@@ -27,6 +27,7 @@
       "print.less",
       "scaffolding.less",
       "grid.less",
+      "type.less",
       "forms.less",
       "navs.less",
       "navbar.less",
