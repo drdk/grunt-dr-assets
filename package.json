@@ -17,7 +17,7 @@
     "assemble-less": "^0.7.0"
   },
   "dependencies": {
-    "dr-local-assets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/dr-assets.git"
+    "dr-assets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/dr-assets.git"
   },
   "readme": "ERROR: No README data found!"
 }
