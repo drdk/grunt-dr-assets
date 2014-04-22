@@ -1,7 +1,7 @@
 {
   "name": "grunt-dr-assets",
   "version": "1.0.1",
-  "description": "DR Assets",
+  "description": "DR Assets Grunt Task",
   "private": true,
   "main": "",
   "scripts": {
@@ -17,7 +17,7 @@
     "assemble-less": "^0.7.0"
   },
   "dependencies": {
-    "dr-assets": "git+ssh://git@github01.net.dr.dk:tu-web-applikationer/dr-assets.git"
+    "dr-assets": "git+ssh://git@github.com:drdk/grunt-dr-assets.git"
   },
   "readme": "ERROR: No README data found!"
 }
