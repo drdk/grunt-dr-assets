@@ -11,7 +11,7 @@
   "bootstrap-components": {
     "cwd": "/",
     "compile": {
-      "dest": "dr-global-components/bootstrap"
+      "dest": "components/bootstrap"
     },
     "files": [
     ],
@@ -50,7 +50,7 @@
   "dr-components": {
     "cwd": "/components/",
     "compile": {
-      "dest": "dr-global-components/dr"
+      "dest": "components/dr"
     },
     "files": "**/*.less",
     "dest": "dr/components/"
