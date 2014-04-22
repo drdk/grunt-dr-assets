@@ -309,7 +309,7 @@ module.exports = (grunt) ->
       grunt.task.run(copyTasks) 
       grunt.task.run(compileTasks) 
       grunt.task.run(resortTasks) 
-      #grunt.task.run("dr-styles-clean:temp")
+      grunt.task.run("dr-styles-clean:temp")
     else
       # No tasks were defined
       grunt.fail.warn "Not running any tasks."
