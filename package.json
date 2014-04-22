@@ -17,7 +17,7 @@
     "assemble-less": "^0.7.0"
   },
   "dependencies": {
-    "dr-assets": "git+ssh://git@github.com:drdk/grunt-dr-assets.git"
+    "dr-assets": "git://github.com/drdk/grunt-dr-assets.git"
   },
   "readme": "ERROR: No README data found!"
 }
