@@ -1,0 +1,27 @@
+{
+  "bootstrap-components": {
+    "cwd": "/",
+    "compile": {
+      "dest": "components/bootstrap"
+    },
+    "files": [
+    ],
+    "dest": "bootstrap/components/"
+  },
+  "dr-components": {
+    "cwd": "/components/",
+    "compile": {
+      "dest": "components/dr"
+    },
+    "files": "**/*.js",
+    "dest": "dr/components/"
+  },
+  "dr-core": {
+    "cwd": "/",
+    "compile": {
+      "dest": "core.js"
+    },
+    "files": "*.js",
+    "dest": "dr/"
+  }
+}

@@ -4,15 +4,6 @@ module.exports = (grunt) ->
 
   grunt.registerTask "styles", "Builds DR LESS and CSS files", (env) ->
 
-    configRootProperty = "dr-assets"
-
-    # Make sure the requires config properties are defined
-    grunt.config.requires(
-      configRootProperty
-      configRootProperty + "." + @name + "." + "options"
-      configRootProperty + "." + @name + "." + "options" + "." + "rootPath"
-    )
-
     # Load libraries
     _  = require('lodash')
     fs = require('fs')
@@ -22,9 +13,6 @@ module.exports = (grunt) ->
 
     # Reference config settings
     config = grunt.config.get(configRootProperty)[@name]
-
-    # Make sure root path has ending slash
-    config.options.rootPath = config.options.rootPath + "/" if config.options.rootPath.substr(-1) isnt "/"
 
     # Read environment variables
     if env? and env is "development"
@@ -56,7 +44,7 @@ module.exports = (grunt) ->
 
     # Load styles config file
     stylesConfig = grunt.file.readJSON(taskPath + "/config/styles.json")
-    if not stylesConfig? then grunt.fail.warn('An error occured. Config (config/styles.json) was not found.')
+    if not stylesConfig? then grunt.fail.warn('An error occured. Config (' + taskPath + "/config/styles.json" + ') was not found.')
 
     # Define paths
     if not config.options.compilePaths.css?
@@ -97,7 +85,7 @@ module.exports = (grunt) ->
     if config.bootstrapComponents? and _.isArray(config.bootstrapComponents) and config.bootstrapComponents.length > 0
       # Make sure the user isn't trying to include all bootstrap files!
       if config.bootstrapComponents.indexOf("*") isnt -1 or config.bootstrapComponents.indexOf("**/*") isnt -1
-        grunt.fail.warn('An error occured. Forbidden path (* or */**). Only choose the necessary task files. Btw, mixins are always included.')
+        grunt.fail.warn('An error occured. Forbidden path (* or */**). Only choose the necessary files. Btw, mixins are always included.')
 
       bootstrapComponentFiles.push file + ".less" for file in config.bootstrapComponents
       intersection = _.intersection(bootstrapComponentFiles, bootstrapCoreFiles)
@@ -133,52 +121,52 @@ module.exports = (grunt) ->
     # Set task config
     taskConfigs =
       "dr-styles-copy":
-          "bootstrap-mixins":
-            expand  : true
-            cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-mixins"].cwd
-            src     : bootstrapMixinFiles
-            dest    : config.options.compilePaths.less + stylesConfig["bootstrap-mixins"].dest
+        "bootstrap-mixins":
+          expand  : true
+          cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-mixins"].cwd
+          src     : bootstrapMixinFiles
+          dest    : config.options.compilePaths.less + stylesConfig["bootstrap-mixins"].dest
 
-          "bootstrap-components":
-            expand  : true
-            cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-components"].cwd
-            src     : bootstrapComponentFiles
-            dest    : tempPath + stylesConfig["bootstrap-components"].dest
+        "bootstrap-components":
+          expand  : true
+          cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-components"].cwd
+          src     : bootstrapComponentFiles
+          dest    : tempPath + stylesConfig["bootstrap-components"].dest
 
-          "bootstrap-core":
-            expand  : true
-            cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-core"].cwd
-            src     : bootstrapCoreFiles
-            dest    : tempPath + stylesConfig["bootstrap-core"].dest
+        "bootstrap-core":
+          expand  : true
+          cwd     : config.options.bootstrapPath + stylesConfig["bootstrap-core"].cwd
+          src     : bootstrapCoreFiles
+          dest    : tempPath + stylesConfig["bootstrap-core"].dest
 
-          "dr-mixins":
-            expand  : true
-            cwd     : config.options.drStylesPath + stylesConfig["dr-mixins"].cwd
-            src     : drMixinFiles
-            dest    : config.options.compilePaths.less + stylesConfig["dr-mixins"].dest
-      
-          "dr-components":
-            nonull: true
-            expand  : true
-            cwd     : config.options.drStylesPath + stylesConfig["dr-components"].cwd
-            src     : drComponentFiles
-            dest    : tempPath + stylesConfig["dr-components"].dest
+        "dr-mixins":
+          expand  : true
+          cwd     : config.options.drStylesPath + stylesConfig["dr-mixins"].cwd
+          src     : drMixinFiles
+          dest    : config.options.compilePaths.less + stylesConfig["dr-mixins"].dest
+    
+        "dr-components":
+          nonull  : true
+          expand  : true
+          cwd     : config.options.drStylesPath + stylesConfig["dr-components"].cwd
+          src     : drComponentFiles
+          dest    : tempPath + stylesConfig["dr-components"].dest
 
-          "dr-core":
-            expand  : true
-            cwd     : config.options.drStylesPath + stylesConfig["dr-core"].cwd
-            src     : drCoreFiles
-            dest    : tempPath + stylesConfig["dr-core"].dest
+        "dr-core":
+          expand  : true
+          cwd     : config.options.drStylesPath + stylesConfig["dr-core"].cwd
+          src     : drCoreFiles
+          dest    : tempPath + stylesConfig["dr-core"].dest
 
-          "dr-build":
-            expand  : true
-            cwd     : config.options.drStylesPath + stylesConfig["dr-build"].cwd
-            src     : drBuildFiles
-            dest    : config.options.compilePaths.less + stylesConfig["dr-build"].dest
+        "dr-build":
+          expand  : true
+          cwd     : config.options.drStylesPath + stylesConfig["dr-build"].cwd
+          src     : drBuildFiles
+          dest    : config.options.compilePaths.less + stylesConfig["dr-build"].dest
 
       "dr-styles-clean": 
-          all: compileFiles
-          temp: [tempPath]
+        all: compileFiles
+        temp: [tempPath]
 
       "dr-styles-less":
         "bootstrap-components":
@@ -309,7 +297,7 @@ module.exports = (grunt) ->
       grunt.task.run(copyTasks) 
       grunt.task.run(compileTasks) 
       grunt.task.run(resortTasks) 
-      #grunt.task.run("dr-styles-clean:temp")
+      grunt.task.run("dr-styles-clean:temp")
     else
       # No tasks were defined
       grunt.fail.warn "Not running any tasks."

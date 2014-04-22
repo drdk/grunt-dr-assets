@@ -6,7 +6,24 @@ module.exports = (grunt) ->
 
     env = "production" if not env?
 
-    # Start the relevant subtasks
+    # Make sure the requires config properties are defined
+    grunt.config.requires(
+      @name
+      @name + "." + @target + "." + "options"
+      @name + "." + @target + "." + "options" + "." + "rootPath"
+    )
+
+    # Reference config settings
+    config = grunt.config.get(@name)
+    
+    # Make sure root path has ending slash
+    config[@target].options.rootPath = config[@target].options.rootPath + "/" if config[@target].options.rootPath.substr(-1) isnt "/"
+
+    # Update processed config parameters
+    grunt.config.set(@name, config)
+
+
+    # Start subtasks
 
     switch @target
       when "styles"
