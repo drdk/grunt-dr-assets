@@ -12,7 +12,7 @@ module.exports = (grunt) ->
     taskPath   = __dirname + "/.."    
 
     # Reference config settings
-    config = grunt.config.get(configRootProperty)[@name]
+    config = grunt.config.get("dr-assets")[@name]
 
     # Read environment variables
     if env? and env is "development"

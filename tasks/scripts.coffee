@@ -75,11 +75,11 @@ module.exports = (grunt) ->
     # Add DR Components
     if config.drComponents? and _.isArray(config.drComponents) and config.drComponents.length > 0
       drComponentFiles.push file + ".js" for file in config.drComponents
-      runTasks.push("dr-scripts-concat", "dr-components")
+      runTasks.push("dr-components")
 
     # Should we build core.js?
     if config.options.buildCorejs
-      runTasks.push("dr-scripts-concat", "dr-core")
+      runTasks.push("dr-core")
 
     if config.options.cleanBeforeBuild
       for name, settings of scriptsConfig
@@ -92,14 +92,14 @@ module.exports = (grunt) ->
       "dr-scripts-copy":
         "bootstrap-components":
           expand  : true
-          cwd     : config.options.bootstrapPath + scriptsConfig["bootstrap-components"].cwd
+          cwd     : tempPath + scriptsConfig["bootstrap-components"].cwd
           src     : bootstrapComponentFiles
           dest    : config.options.compilePaths.js + scriptsConfig["bootstrap-components"].dest
     
         "dr-components":
           nonull  : true
           expand  : true
-          cwd     : config.options.drScriptsPath + scriptsConfig["dr-components"].cwd
+          cwd     : tempPath + scriptsConfig["dr-components"].cwd
           src     : drComponentFiles
           dest    : config.options.compilePaths.js + scriptsConfig["dr-components"].dest
 
@@ -123,12 +123,14 @@ module.exports = (grunt) ->
 
     (-> #processYAMLfile
       grunt.file.expand(config.options.drScriptsPath + "/**/*.yaml").forEach (file) ->
-        outputName = file.slice(0, file.length - 5)
+        outputName = config.options.compilePaths.js + file.slice(file.lastIndexOf("/") + 1, -5)
         concatFiles = grunt.file.readYAML(file).files
         for file, index in concatFiles
-          file = file.slice(0, file.lastIndexOf("/")) + "/" + file
+          concatFiles[index] = tempPath + file.slice(0, file.lastIndexOf("/")) + "/" + file
         taskConfigs["dr-scripts-concat"].default.files[outputName] = concatFiles
     )()
+
+
 
 
     #(-> #processYAMLfile
@@ -158,7 +160,7 @@ module.exports = (grunt) ->
 
     # Make sure there are no duplicates
     runTasks = _.uniq(runTasks)
-    
+
     # Run the relevant tasks
     if runTasks.length > 0
       copyTasks         = []
@@ -174,8 +176,10 @@ module.exports = (grunt) ->
         # Run copy tasks
         copyTasks.push "dr-scripts-copy:" + task
       
+      grunt.task.run("dr-scripts-concat")
       grunt.task.run(copyTasks) 
       grunt.task.run(compileTasks)
+
       #grunt.task.run("dr-scripts-clean:temp")
     else
       # No tasks were defined
