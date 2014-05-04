@@ -21,7 +21,22 @@
     "compile": {
       "dest": "core.js"
     },
-    "files": "*.js",
-    "dest": "dr/"
+    "files": [
+      "third/modernizr/modernizr.js",
+      "third/jquery/jquery-1.11.0.js",
+      "components/core.js",
+      "require.config.js"
+    ],
+    "dest": "/"
+  },
+  "dr-webfonts": {
+    "cwd": "/",
+    "compile": {
+      "dest": "core-webfonts.js"
+    },
+    "files": [
+      "components/core-webfonts.js"
+    ],
+    "dest": "/"
   }
 }

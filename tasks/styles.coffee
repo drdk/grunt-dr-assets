@@ -215,8 +215,15 @@ module.exports = (grunt) ->
               options:
                 block: true
                 line: true
-          src: tempPath + stylesConfig["dr-core"].dest + "core.less"
-          dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
+          files: [
+            { src: tempPath + stylesConfig["dr-core"].dest + "core.less", dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest }
+            { src: tempPath + stylesConfig["dr-core"].dest + "fonts-svg.less", dest: config.options.compilePaths.css + "fonts-svg.css" }
+            { src: tempPath + stylesConfig["dr-core"].dest + "fonts-ttf.less", dest: config.options.compilePaths.css + "fonts-ttf.css" }
+            { src: tempPath + stylesConfig["dr-core"].dest + "fonts-woff.less", dest: config.options.compilePaths.css + "fonts-woff.css" }
+          ]
+
+          #src: tempPath + stylesConfig["dr-core"].dest + "core.less"
+          #dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
 
       "dr-styles-csscomb":
         "bootstrap-components":
@@ -256,6 +263,12 @@ module.exports = (grunt) ->
       componentSrcFiles.push tempPath + stylesConfig[subtask].dest + componentFile for componentFile in componentFiles
       taskConfigs["dr-styles-less"][subtask].files[config.options.compilePaths.css + stylesConfig[subtask].compile.dest + '/' + subtask + '.css'] = componentSrcFiles
   
+    grunt.registerTask "inline-webfonts", "Inline webfonts in stylesheets", ->
+        inline = require("dr-webfont-inliner")
+        ["woff", "ttf", "svg"].forEach (type) ->
+          targetPath = config.options.compilePaths.css
+          inline(targetPath + "fonts-" + type + ".css", targetPath + "fonts-" + type + ".css")
+
     if config.options.concatFiles
       concatLessFiles("bootstrap-components", bootstrapComponentFiles)
       concatLessFiles("dr-components", drComponentFiles)
@@ -297,6 +310,10 @@ module.exports = (grunt) ->
       grunt.task.run(copyTasks) 
       grunt.task.run(compileTasks) 
       grunt.task.run(resortTasks) 
+
+      if config.options.buildCoreCSS
+        grunt.task.run("inline-webfonts")
+
       grunt.task.run("dr-styles-clean:temp")
     else
       # No tasks were defined

@@ -15,7 +15,9 @@
     "grunt-contrib-clean": "^0.5.0",
     "grunt-csscomb": "^2.0.1",
     "assemble-less": "^0.7.0",
-    "grunt-contrib-concat": "^0.4.0"
+    "grunt-contrib-concat": "^0.4.0",
+    "dr-webfont-inliner": "~0.2.0",
+    "grunt-contrib-uglify": "~0.4.0"
   },
   "dependencies": {
     "dr-assets": "git://github.com/drdk/dr-assets.git"
