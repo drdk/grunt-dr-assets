@@ -2,7 +2,7 @@
 
 module.exports = (grunt) ->
 
-  grunt.registerTask "scripts", "Builds DR script files", (env) ->
+  grunt.registerTask "scripts", "Builds DR script files", ->
 
     # Load libraries
     _  = require('lodash')
@@ -14,13 +14,6 @@ module.exports = (grunt) ->
     # Reference config settings
     config = grunt.config.get("dr-assets")[@name]
 
-    # Read environment variables
-    if not config.options.compressJS?
-      if env? and env is "development"
-        config.options.compressJS = false
-      else
-        config.options.compressJS = true
-
     # Set the other default values
     config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
@@ -29,6 +22,7 @@ module.exports = (grunt) ->
       bootstrapPath       : taskPath + "/node_modules/dr-assets/node_modules/bootstrap/js"
       buildCoreJS         : false
       cleanBeforeBuild    : false
+      compress            : false
       concatFiles         : false
 
     bootstrapComponents = [] if not config.bootstrapComponents?
@@ -123,8 +117,8 @@ module.exports = (grunt) ->
       "dr-scripts-uglify":
         "dr-core":
           options:
-            compress: config.options.compressJS is true
-            beautify: config.options.compressJS is false
+            compress: config.options.compress is true
+            beautify: config.options.compress is false
           files: [
             { src: _.map(drCoreFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-core"].compile.dest }
             { src: _.map(drWebFontsFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-webfonts"].compile.dest }
@@ -198,7 +192,7 @@ module.exports = (grunt) ->
       grunt.task.run(copyTasks) 
       grunt.task.run(compileTasks)
 
-      #grunt.task.run("dr-scripts-clean:temp")
+      grunt.task.run("dr-scripts-clean:temp")
     else
       # No tasks were defined
       grunt.fail.warn "Not running any tasks."

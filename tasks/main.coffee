@@ -2,9 +2,7 @@
 
 module.exports = (grunt) ->
 
-  grunt.registerMultiTask "dr-assets", "Main subtask controller", (env) ->
-
-    env = "production" if not env?
+  grunt.registerMultiTask "dr-assets", "Main subtask controller", ->
 
     # Make sure the requires config properties are defined
     grunt.config.requires(
@@ -28,11 +26,11 @@ module.exports = (grunt) ->
     switch @target
       when "styles"
         grunt.log.writeln("Starting styles subtasks")
-        grunt.task.run("styles:" + env)
+        grunt.task.run("styles")
     
       when "scripts"
         grunt.log.writeln("Starting scripts subtasks")
-        grunt.task.run("scripts:" + env)
+        grunt.task.run("scripts")
     
       else
         grunt.fail.warn "Failed. No tasks were recognized."

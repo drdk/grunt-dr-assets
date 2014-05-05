@@ -2,7 +2,7 @@
 
 module.exports = (grunt) ->
 
-  grunt.registerTask "styles", "Builds DR LESS and CSS files", (env) ->
+  grunt.registerTask "styles", "Builds DR LESS and CSS files", ->
 
     # Load libraries
     _  = require('lodash')
@@ -14,12 +14,6 @@ module.exports = (grunt) ->
     # Reference config settings
     config = grunt.config.get("dr-assets")[@name]
 
-    # Read environment variables
-    if env? and env is "development"
-      config.options.compressCSS = false
-    else
-      config.options.compressCSS = true
-
     # Set the other default values
     config.options = _.defaults config.options, 
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
@@ -29,6 +23,7 @@ module.exports = (grunt) ->
       buildMixins         : true
       buildCoreCSS        : false
       cleanBeforeBuild    : false
+      compress            : false
       concatFiles         : false
       includeBuildFiles   : false
       bootstrapComponents : []
@@ -180,7 +175,7 @@ module.exports = (grunt) ->
             ieCompat: true
             strictMath: true
             sourceMap: false
-            cleancss: config.options.compressCSS
+            cleancss: config.options.compress
             paths: [config.options.compilePaths.less]
             imports: 
               reference: ["dr/variables.less", "bootstrap/mixins.less"]
@@ -197,7 +192,7 @@ module.exports = (grunt) ->
             ieCompat: true
             strictMath: true
             sourceMap: false
-            cleancss: config.options.compressCSS
+            cleancss: config.options.compress
             paths: [config.options.compilePaths.less]
             imports: 
               reference: ["dr/variables.less", "bootstrap/mixins.less", "dr/mixins.less"]
@@ -213,7 +208,7 @@ module.exports = (grunt) ->
           options:
             strictMath: true
             sourceMap: false
-            cleancss: config.options.compressCSS
+            cleancss: config.options.compress
             expand: true
             flatten: false
             ieCompat: true
@@ -229,7 +224,7 @@ module.exports = (grunt) ->
           options:
             strictMath: true
             sourceMap: false
-            cleancss: config.options.compressCSS
+            cleancss: config.options.compress
             expand: true
             flatten: false
             ieCompat: true
@@ -251,9 +246,6 @@ module.exports = (grunt) ->
             { src: tempPath + stylesConfig["dr-core"].dest + "fonts-ttf.less", dest: config.options.compilePaths.css + "fonts-ttf.css" }
             { src: tempPath + stylesConfig["dr-core"].dest + "fonts-woff.less", dest: config.options.compilePaths.css + "fonts-woff.css" }
           ]
-
-          #src: tempPath + stylesConfig["dr-core"].dest + "core.less"
-          #dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
 
       "dr-styles-csscomb":
         "bootstrap-components":
