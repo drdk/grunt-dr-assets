@@ -204,31 +204,30 @@ module.exports = (grunt) ->
           ]
 
         "dr-core":
-          "core":
-            options:
-              strictMath: true
-              sourceMap: false
-              cleancss: config.options.compressCSS
-              expand: true
-              flatten: false
-              ieCompat: true
-              stripBanners:
-                options:
-                  block: true
-                  line: true
-            files: [
-              { src: tempPath + stylesConfig["dr-core"].dest + "core.less", dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest }
-            ]
-          "dr-fonts":
-            options:
-              strictMath: true
-              sourceMap: false
-              expand: true
-            files: [
-              { src: tempPath + stylesConfig["dr-core"].dest + "fonts-svg.less", dest: config.options.compilePaths.css + "fonts-svg.css" }
-              { src: tempPath + stylesConfig["dr-core"].dest + "fonts-ttf.less", dest: config.options.compilePaths.css + "fonts-ttf.css" }
-              { src: tempPath + stylesConfig["dr-core"].dest + "fonts-woff.less", dest: config.options.compilePaths.css + "fonts-woff.css" }
-            ]
+          options:
+            strictMath: true
+            sourceMap: false
+            cleancss: config.options.compressCSS
+            expand: true
+            flatten: false
+            ieCompat: true
+            stripBanners:
+              options:
+                block: true
+                line: true
+          files: [
+            { src: tempPath + stylesConfig["dr-core"].dest + "core.less", dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest }
+          ]
+        "dr-fonts":
+          options:
+            strictMath: true
+            sourceMap: false
+            expand: true
+          files: [
+            { src: tempPath + stylesConfig["dr-core"].dest + "fonts-svg.less", dest: config.options.compilePaths.css + "fonts-svg.css" }
+            { src: tempPath + stylesConfig["dr-core"].dest + "fonts-ttf.less", dest: config.options.compilePaths.css + "fonts-ttf.css" }
+            { src: tempPath + stylesConfig["dr-core"].dest + "fonts-woff.less", dest: config.options.compilePaths.css + "fonts-woff.css" }
+          ]
 
           #src: tempPath + stylesConfig["dr-core"].dest + "core.less"
           #dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
@@ -320,6 +319,7 @@ module.exports = (grunt) ->
       grunt.task.run(resortTasks) 
 
       if config.options.buildCoreCSS
+        grunt.task.run("dr-styles-less:dr-fonts")
         grunt.task.run("inline-webfonts")
 
       grunt.task.run("dr-styles-clean:temp")
