@@ -105,7 +105,7 @@ module.exports = (grunt) ->
       logosPath = config.options.compilePaths.css + "../shared/dr-logos.less"
       if not fs.existsSync(logosPath)
         grunt.fail.warn('An error occured. Could not find logos.less at ' + logosPath + ' . This type of build is only for global-assets.')
-      runTasks.push("bootstrap-core", "dr-core")
+      runTasks.push("bootstrap-core", "dr-core", "dr-core-backup")
 
     if config.options.includeBuildFiles
       runTasks.push("dr-build")
@@ -153,6 +153,12 @@ module.exports = (grunt) ->
           dest    : tempPath + stylesConfig["dr-components"].dest
 
         "dr-core":
+          expand  : true
+          cwd     : config.options.drStylesPath + stylesConfig["dr-core"].cwd
+          src     : drCoreFiles
+          dest    : tempPath + stylesConfig["dr-core"].dest
+
+        "dr-core-backup":
           expand  : true
           cwd     : config.options.drStylesPath + stylesConfig["dr-core"].cwd
           src     : drCoreFiles
@@ -218,6 +224,23 @@ module.exports = (grunt) ->
           files: [
             { src: tempPath + stylesConfig["dr-core"].dest + "core.less", dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest }
           ]
+
+        "dr-core-backup":
+          options:
+            strictMath: true
+            sourceMap: false
+            cleancss: config.options.compressCSS
+            expand: true
+            flatten: false
+            ieCompat: true
+            stripBanners:
+              options:
+                block: true
+                line: true
+          files: [
+            { src: tempPath + stylesConfig["dr-core"].dest + "core-backup.less", dest: config.options.compilePaths.css + "core-backup.css" }
+          ]
+
         "dr-fonts":
           options:
             strictMath: true
@@ -254,6 +277,16 @@ module.exports = (grunt) ->
           ]
 
         "dr-core":
+          options:
+            config: config.options.rootPath + stylesConfig["dr-build"].dest + ".csscomb.json"
+          files: [
+            expand: true
+            cwd: config.options.rootPath + stylesConfig["dr-core"].compile.dest
+            src: "**/*.css"
+            dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
+          ]
+
+        "dr-core-backup":
           options:
             config: config.options.rootPath + stylesConfig["dr-build"].dest + ".csscomb.json"
           files: [
