@@ -245,6 +245,7 @@ module.exports = (grunt) ->
             { src: tempPath + stylesConfig["dr-core"].dest + "fonts-svg.less", dest: config.options.compilePaths.css + "fonts-svg.css" }
             { src: tempPath + stylesConfig["dr-core"].dest + "fonts-ttf.less", dest: config.options.compilePaths.css + "fonts-ttf.css" }
             { src: tempPath + stylesConfig["dr-core"].dest + "fonts-woff.less", dest: config.options.compilePaths.css + "fonts-woff.css" }
+            { src: tempPath + stylesConfig["dr-core"].dest + "fonts-eot.less", dest: config.options.compilePaths.css + "fonts-eot.css" }
           ]
 
       "dr-styles-csscomb":
