@@ -22,6 +22,7 @@
       "dest": "core.js"
     },
     "files": [
+      "third/require/require.js",
       "third/modernizr/modernizr.js",
       "third/jquery/jquery-1.11.0.js",
       "components/core.js",
@@ -38,5 +39,14 @@
       "components/core-webfonts.js"
     ],
     "dest": "/"
+  },
+  "third": {
+    "cwd": "/",
+    "compile": false,
+    "files": [
+      "third/respond/respond.js",
+      "third/html5shiv/html5shiv.js"
+    ],
+    "dest": "third/"
   }
 }
