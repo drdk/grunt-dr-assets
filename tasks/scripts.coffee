@@ -59,6 +59,7 @@ module.exports = (grunt) ->
     drComponentFiles        = []
     drCoreFiles             = scriptsConfig["dr-core"].files
     drWebFontsFiles         = scriptsConfig["dr-webfonts"].files
+    thirdPartyFiles         = scriptsConfig["third"].files
     tempPath                = config.options.tempPath
 
     # Add Bootstrap Components
@@ -79,6 +80,7 @@ module.exports = (grunt) ->
       drComponentFiles.push("core", "core-webfonts")
       runTasks.push("dr-components")
       runTasks.push("dr-core")
+      runTasks.push("third")
 
     if config.options.cleanBeforeBuild
       for name, settings of scriptsConfig
@@ -107,6 +109,12 @@ module.exports = (grunt) ->
           src     : drCoreFiles # Gets processed and automagically added.
           dest    : tempPath + scriptsConfig["dr-core"].dest
 
+        "third":
+          expand  : true
+          cwd     : config.options.drScriptsPath + scriptsConfig["third"].cwd
+          src     : thirdPartyFiles
+          dest    : config.options.compilePaths.js + scriptsConfig["third"].dest
+
       "dr-scripts-concat":
         options:
           separator: ";"
@@ -123,6 +131,16 @@ module.exports = (grunt) ->
             { src: _.map(drCoreFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-core"].compile.dest }
             { src: _.map(drWebFontsFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-webfonts"].compile.dest }
           ]
+
+        "third":
+          options:
+            compress: scriptsConfig["third"].compile
+          files: [{
+            expand: true
+            cwd: config.options.compilePaths.js
+            src: thirdPartyFiles
+            dest: config.options.compilePaths.js + scriptsConfig["third"].dest        
+          }]
 
       "dr-scripts-clean": 
         all: compileFiles
@@ -184,6 +202,9 @@ module.exports = (grunt) ->
         if task is "dr-core"
           taskConfigs["dr-scripts-copy"]["dr-core"].src = processCoreFiles(drCoreFiles)
           compileTasks.push "dr-scripts-uglify:dr-core"
+        
+        if task is "third"
+          compileTasks.push "dr-scripts-uglify:third"
 
         # Run copy tasks
         if task isnt "dr-components"
