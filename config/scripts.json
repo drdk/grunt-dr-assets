@@ -47,6 +47,6 @@
       "third/respond/respond.js",
       "third/html5shiv/html5shiv.js"
     ],
-    "dest": "third/"
+    "dest": "/"
   }
 }
