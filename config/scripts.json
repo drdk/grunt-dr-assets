@@ -24,8 +24,8 @@
     "files": [
       "third/require/require.js",
       "third/modernizr/modernizr.js",
-      "third/jquery/jquery-1.11.0.js",
-      "components/core.js"
+      "components/core.js",
+      "third/jquery/jquery-1.11.0.js"
     ],
     "dest": "/"
   },
@@ -44,7 +44,8 @@
     "compile": false,
     "files": [
       "third/respond/respond.js",
-      "third/html5shiv/html5shiv.js"
+      "third/html5shiv/html5shiv.js",
+      "third/fastclick/fastclick.js"
     ],
     "dest": "/"
   }
