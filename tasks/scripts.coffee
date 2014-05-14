@@ -136,6 +136,7 @@ module.exports = (grunt) ->
         "third":
           options:
             compress: scriptsConfig["third"].compile
+            mangle: false
           files: [{
             expand: true
             cwd: config.options.compilePaths.js
