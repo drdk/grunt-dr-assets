@@ -127,6 +127,7 @@ module.exports = (grunt) ->
           options:
             compress: config.options.compress is true
             beautify: config.options.compress is false
+            mangle: false
           files: [
             { src: _.map(drCoreFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-core"].compile.dest }
             { src: _.map(drWebFontsFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-webfonts"].compile.dest }
