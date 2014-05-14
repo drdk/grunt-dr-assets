@@ -25,7 +25,6 @@
       "third/require/require.js",
       "third/modernizr/modernizr.js",
       "third/jquery/jquery-1.11.0.js",
-      "third/fastclick/fastclick.js",
       "components/core.js"
     ],
     "dest": "/"
