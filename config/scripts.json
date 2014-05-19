@@ -45,8 +45,7 @@
     "files": [
       "third/respond/respond.js",
       "third/modernizr/modernizr.js",
-      "third/html5shiv/html5shiv.js",
-      "third/fastclick/fastclick.js"
+      "third/html5shiv/html5shiv.js"
     ],
     "dest": "/"
   }
