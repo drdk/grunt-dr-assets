@@ -57,6 +57,7 @@ module.exports = (grunt) ->
 
     # Should we build core.js?
     if config.options.buildCore
+      config.drComponents.push("core")
       runTasks.push("dr-core")
 
     # Add DR Components
@@ -74,7 +75,7 @@ module.exports = (grunt) ->
           expand  : true
           cwd     : tempPath + scriptsConfig["dr-components"].cwd
           src     : drComponentFiles
-          dest    : config.options.compilePaths.js + scriptsConfig["bootstrap-components"].dest
+          dest    : config.options.compilePaths.js + scriptsConfig["dr-components"].dest
 
         "dr-core":
           expand  : true
