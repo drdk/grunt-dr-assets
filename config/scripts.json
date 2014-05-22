@@ -10,7 +10,7 @@
   "dr-components": {
     "cwd": "/components/",
     "compile": {
-      "dest": "components/test.js"
+      "dest": "components/"
     },
     "files": [],
     "dest": "components/"
