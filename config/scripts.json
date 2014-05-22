@@ -4,17 +4,16 @@
     "compile": {
       "dest": "components/bootstrap"
     },
-    "files": [
-    ],
+    "files": [],
     "dest": "bootstrap/components/"
   },
   "dr-components": {
     "cwd": "/components/",
     "compile": {
-      "dest": "components/dr"
+      "dest": "components/test.js"
     },
-    "files": "**/*.js",
-    "dest": "dr/components/"
+    "files": [],
+    "dest": "components/"
   },
   "dr-core": {
     "cwd": "/",
@@ -32,10 +31,10 @@
   "dr-webfonts": {
     "cwd": "/",
     "compile": {
-      "dest": "core-webfonts.js"
+      "dest": "components/webfonts.js"
     },
     "files": [
-      "components/core-webfonts.js"
+      "components/webfonts.js"
     ],
     "dest": "/"
   },

@@ -25,8 +25,8 @@ module.exports = (grunt) ->
       compress            : false
       concatFiles         : false
 
-    bootstrapComponents = [] if not config.bootstrapComponents?
-    drComponents        = [] if not config.drComponents?
+    config.bootstrapComponents = [] if not config.bootstrapComponents?
+    config.drComponents        = [] if not config.drComponents?
 
     # Make sure DR Assets path exists.
     if not fs.existsSync(config.options.drScriptsPath)
@@ -77,7 +77,7 @@ module.exports = (grunt) ->
 
     # Should we build core.js?
     if config.options.buildCoreJS
-      drComponentFiles.push("core", "core-webfonts")
+      config.drComponents.push("widget-media", "webfonts")
       runTasks.push("dr-components")
       runTasks.push("dr-core")
       runTasks.push("third")
@@ -130,8 +130,19 @@ module.exports = (grunt) ->
             mangle: false
           files: [
             { src: _.map(drCoreFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-core"].compile.dest }
-            { src: _.map(drWebFontsFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-webfonts"].compile.dest }
           ]
+
+        "dr-components":
+          options:
+            compress: config.options.compress is true
+            beautify: config.options.compress is false
+            mangle: false
+          files: [{
+            expand: true
+            cwd: tempPath + scriptsConfig["dr-components"].cwd  
+            src: drComponentFiles
+            dest: config.options.compilePaths.js + scriptsConfig["dr-components"].dest        
+          }]
 
         "third":
           options:
@@ -196,10 +207,11 @@ module.exports = (grunt) ->
 
       for task in runTasks
         if task is "dr-components"
-          for file in drComponentFiles
+          for file in config.drComponents
             processYAMLfile(file)
             drComponentFiles.push file + ".js"
           grunt.task.run("dr-scripts-concat")
+          compileTasks.push "dr-scripts-uglify:dr-components"
 
         if task is "dr-core"
           taskConfigs["dr-scripts-copy"]["dr-core"].src = processCoreFiles(drCoreFiles)
@@ -209,10 +221,10 @@ module.exports = (grunt) ->
           compileTasks.push "dr-scripts-uglify:third"
 
         # Run copy tasks
-        if task isnt "dr-components"
-          copyTasks.push "dr-scripts-copy:" + task
-      
+        copyTasks.push "dr-scripts-copy:" + task
+        
       grunt.task.run(copyTasks) 
+
       grunt.task.run(compileTasks)
 
       grunt.task.run("dr-scripts-clean:temp")
