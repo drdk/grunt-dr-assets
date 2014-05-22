@@ -17,7 +17,7 @@ module.exports = (grunt) ->
     # Set the other default values
     config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
-      compilePath         : config.options.rootPath + "js/"
+      compilePaths        : {}
       drScriptsPath       : taskPath + "/node_modules/dr-assets/js"
       buildCore           : false
       cleanBeforeBuild    : false
@@ -36,13 +36,16 @@ module.exports = (grunt) ->
     scriptsConfig = grunt.file.readJSON(scriptsConfigPath)
     if not scriptsConfig? then grunt.fail.warn('An error occured. Config (' + scriptsConfigPath + ') was not found.')
 
-    # Ending slash
-    config.options.compilePath = config.options.compilePath + "/" if config.options.compilePath.substr(-1) isnt "/"
+    # Define paths
+    if not config.options.compilePaths.js?
+      config.options.compilePaths.js  = config.options.rootPath + "js/" 
+    else
+      config.options.compilePaths.js = config.options.compilePaths.js + "/" if config.options.compilePaths.js.substr(-1) isnt "/"
 
     # Only build if it doesnt exist?
     if config.options.skipIfExists
-      if fs.existsSync(config.options.compilePath)
-        return grunt.log.ok('Skipping build as the following paths already exists: ' + config.options.compilePath)
+      if fs.existsSync(config.options.compilePaths.js)
+        return grunt.log.ok('Skipping build as the following paths already exists: ' + config.options.compilePaths.js)
 
     # Read and set vars for running the tasks
     runTasks                = []
@@ -71,7 +74,7 @@ module.exports = (grunt) ->
           expand  : true
           cwd     : tempPath + scriptsConfig["dr-components"].cwd
           src     : drComponentFiles
-          dest    : config.options.compilePath + scriptsConfig["dr-components"].dest
+          dest    : config.options.compilePaths.js + scriptsConfig["bootstrap-components"].dest
 
         "dr-core":
           expand  : true
@@ -83,7 +86,7 @@ module.exports = (grunt) ->
           expand  : true
           cwd     : config.options.drScriptsPath + scriptsConfig["third"].cwd
           src     : thirdPartyFiles
-          dest    : config.options.compilePath + scriptsConfig["third"].dest
+          dest    : config.options.compilePaths.js + scriptsConfig["third"].dest
 
       "dr-scripts-concat":
         options:
@@ -100,7 +103,7 @@ module.exports = (grunt) ->
             mangle: false
             sourceMap: config.options.sourceMap
           files: [
-            { src: _.map(drCoreFiles, (file) -> return tempPath + file), dest: config.options.compilePath + scriptsConfig["dr-core"].compile.dest }
+            { src: _.map(drCoreFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-core"].compile.dest }
           ]
 
         "dr-components":
@@ -113,7 +116,7 @@ module.exports = (grunt) ->
             expand: true
             cwd: tempPath + scriptsConfig["dr-components"].cwd  
             src: drComponentFiles
-            dest: config.options.compilePath + scriptsConfig["dr-components"].dest        
+            dest: config.options.compilePaths.js + scriptsConfig["dr-components"].dest        
           }]
 
         "third":
@@ -122,13 +125,13 @@ module.exports = (grunt) ->
             mangle: false
           files: [{
             expand: true
-            cwd: config.options.compilePath
+            cwd: config.options.compilePaths.js
             src: thirdPartyFiles
-            dest: config.options.compilePath + scriptsConfig["third"].dest        
+            dest: config.options.compilePaths.js + scriptsConfig["third"].dest        
           }]
 
       "dr-scripts-clean": 
-        all: [config.options.compilePath + "**/*", "!" + config.options.compilePath + "**/README"]
+        all: [config.options.compilePaths.js + "**/*", "!" + config.options.compilePaths.js + "**/README"]
         temp: [tempPath]
 
     processYAMLfile = (component) ->
