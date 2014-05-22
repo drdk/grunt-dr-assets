@@ -17,91 +17,61 @@ module.exports = (grunt) ->
     # Set the other default values
     config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
-      compilePaths        : {}
+      compilePath         : config.options.rootPath + "js/"
       drScriptsPath       : taskPath + "/node_modules/dr-assets/js"
-      bootstrapPath       : taskPath + "/node_modules/dr-assets/node_modules/bootstrap/js"
-      buildCoreJS         : false
+      buildCore           : false
       cleanBeforeBuild    : false
+      sourceMap           : false
       compress            : false
       concatFiles         : false
 
-    bootstrapComponents = [] if not config.bootstrapComponents?
-    drComponents        = [] if not config.drComponents?
+    config.drComponents = [] if not config.drComponents?
 
     # Make sure DR Assets path exists.
     if not fs.existsSync(config.options.drScriptsPath)
       grunt.fail.warn('An error occured. Could not find DR Assets at ' + config.options.drScriptsPath + ' .')
-
-    # Make sure Bootstrap path exists.
-    if not fs.existsSync(config.options.bootstrapPath)
-      grunt.fail.warn('An error occured. Could not find Bootstrap at ' + config.options.bootstrapPath + ' .')
 
     # Load styles config file
     scriptsConfigPath = taskPath + "/config/scripts.json"
     scriptsConfig = grunt.file.readJSON(scriptsConfigPath)
     if not scriptsConfig? then grunt.fail.warn('An error occured. Config (' + scriptsConfigPath + ') was not found.')
 
-    # Define paths
-    if not config.options.compilePaths.js?
-      config.options.compilePaths.js  = config.options.rootPath + "js/" 
-    else
-      config.options.compilePaths.js = config.options.compilePaths.js + "/" if config.options.compilePaths.js.substr(-1) isnt "/"
+    # Ending slash
+    config.options.compilePath = config.options.compilePath + "/" if config.options.compilePath.substr(-1) isnt "/"
 
     # Only build if it doesnt exist?
     if config.options.skipIfExists
-      if fs.existsSync(config.options.compilePaths.js)
-        return grunt.log.ok('Skipping build as the following paths already exists: ' + config.options.compilePaths.js)
+      if fs.existsSync(config.options.compilePath)
+        return grunt.log.ok('Skipping build as the following paths already exists: ' + config.options.compilePath)
 
     # Read and set vars for running the tasks
     runTasks                = []
     compileFiles            = []
-    bootstrapComponentFiles = []
     drComponentFiles        = []
     drCoreFiles             = scriptsConfig["dr-core"].files
-    drWebFontsFiles         = scriptsConfig["dr-webfonts"].files
     thirdPartyFiles         = scriptsConfig["third"].files
     tempPath                = config.options.tempPath
 
-    # Add Bootstrap Components
-    if config.bootstrapComponents? and _.isArray(config.bootstrapComponents) and config.bootstrapComponents.length > 0
-      # Make sure the user isn't trying to include all bootstrap files!
-      if config.bootstrapComponents.indexOf("*") isnt -1 or config.bootstrapComponents.indexOf("**/*") isnt -1
-        grunt.fail.warn('An error occured. Forbidden path (* or */**). Only choose the necessary files.')
-
-      bootstrapComponentFiles.push file + ".js" for file in config.bootstrapComponents
-      runTasks.push("bootstrap-components")
+    # Should we build core.js?
+    if config.options.buildCore
+      runTasks.push("dr-core")
 
     # Add DR Components
     if config.drComponents? and _.isArray(config.drComponents) and config.drComponents.length > 0
       runTasks.push("dr-components")
 
-    # Should we build core.js?
-    if config.options.buildCoreJS
-      drComponentFiles.push("core", "core-webfonts")
-      runTasks.push("dr-components")
-      runTasks.push("dr-core")
+    # Should we build third party js
+    if config.options.buildThird
       runTasks.push("third")
-
-    if config.options.cleanBeforeBuild
-      for name, settings of scriptsConfig
-        if scriptsConfig[name].compile
-          compileFiles.push config.options.compilePaths.js + scriptsConfig[name].compile.dest 
-          compileFiles.push config.options.compilePaths.js + scriptsConfig[name].compile.dest.split("/")[0]
 
     # Set task config
     taskConfigs =
       "dr-scripts-copy":
-        "bootstrap-components":
-          expand  : true
-          cwd     : config.options.drScriptsPath + scriptsConfig["bootstrap-components"].cwd
-          src     : bootstrapComponentFiles
-          dest    : config.options.compilePaths.js + scriptsConfig["bootstrap-components"].dest
-    
         "dr-components":
           expand  : true
           cwd     : tempPath + scriptsConfig["dr-components"].cwd
           src     : drComponentFiles
-          dest    : config.options.compilePaths.js + scriptsConfig["dr-components"].dest
+          dest    : config.options.compilePath + scriptsConfig["dr-components"].dest
 
         "dr-core":
           expand  : true
@@ -113,7 +83,7 @@ module.exports = (grunt) ->
           expand  : true
           cwd     : config.options.drScriptsPath + scriptsConfig["third"].cwd
           src     : thirdPartyFiles
-          dest    : config.options.compilePaths.js + scriptsConfig["third"].dest
+          dest    : config.options.compilePath + scriptsConfig["third"].dest
 
       "dr-scripts-concat":
         options:
@@ -128,10 +98,23 @@ module.exports = (grunt) ->
             compress: config.options.compress is true
             beautify: config.options.compress is false
             mangle: false
+            sourceMap: config.options.sourceMap
           files: [
-            { src: _.map(drCoreFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-core"].compile.dest }
-            { src: _.map(drWebFontsFiles, (file) -> return tempPath + file), dest: config.options.compilePaths.js + scriptsConfig["dr-webfonts"].compile.dest }
+            { src: _.map(drCoreFiles, (file) -> return tempPath + file), dest: config.options.compilePath + scriptsConfig["dr-core"].compile.dest }
           ]
+
+        "dr-components":
+          options:
+            compress: config.options.compress is true
+            beautify: config.options.compress is false
+            mangle: false
+            sourceMap: config.options.sourceMap
+          files: [{
+            expand: true
+            cwd: tempPath + scriptsConfig["dr-components"].cwd  
+            src: drComponentFiles
+            dest: config.options.compilePath + scriptsConfig["dr-components"].dest        
+          }]
 
         "third":
           options:
@@ -139,13 +122,13 @@ module.exports = (grunt) ->
             mangle: false
           files: [{
             expand: true
-            cwd: config.options.compilePaths.js
+            cwd: config.options.compilePath
             src: thirdPartyFiles
-            dest: config.options.compilePaths.js + scriptsConfig["third"].dest        
+            dest: config.options.compilePath + scriptsConfig["third"].dest        
           }]
 
       "dr-scripts-clean": 
-        all: compileFiles
+        all: [config.options.compilePath + "**/*", "!" + config.options.compilePath + "**/README"]
         temp: [tempPath]
 
     processYAMLfile = (component) ->
@@ -192,14 +175,15 @@ module.exports = (grunt) ->
         grunt.config.set name, settings
 
       if config.options.cleanBeforeBuild
-        grunt.task.run("dr-scripts-clean:all") 
+        grunt.task.run("dr-scripts-clean:all")
 
       for task in runTasks
         if task is "dr-components"
-          for file in drComponentFiles
+          for file in config.drComponents
             processYAMLfile(file)
             drComponentFiles.push file + ".js"
           grunt.task.run("dr-scripts-concat")
+          compileTasks.push "dr-scripts-uglify:dr-components"
 
         if task is "dr-core"
           taskConfigs["dr-scripts-copy"]["dr-core"].src = processCoreFiles(drCoreFiles)
@@ -209,10 +193,10 @@ module.exports = (grunt) ->
           compileTasks.push "dr-scripts-uglify:third"
 
         # Run copy tasks
-        if task isnt "dr-components"
-          copyTasks.push "dr-scripts-copy:" + task
-      
+        copyTasks.push "dr-scripts-copy:" + task
+        
       grunt.task.run(copyTasks) 
+
       grunt.task.run(compileTasks)
 
       grunt.task.run("dr-scripts-clean:temp")
