@@ -185,7 +185,7 @@ module.exports = (grunt) ->
         if task is "dr-components"
           for file in config.drComponents
             processYAMLfile(file)
-            drComponentFiles.push file + ".js"
+            drComponentFiles.push file + ".js" if file isnt "core"
           grunt.task.run("dr-scripts-concat")
           compileTasks.push "dr-scripts-uglify:dr-components"
 
