@@ -43,6 +43,7 @@
     "compile": false,
     "files": [
       "third/respond/respond.js",
+      "third/respond/respond-proxy.html",
       "third/modernizr/modernizr.js",
       "third/html5shiv/html5shiv.js"
     ],
