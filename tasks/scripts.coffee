@@ -127,7 +127,7 @@ module.exports = (grunt) ->
           files: [{
             expand: true
             cwd: config.options.compilePaths.js
-            src: thirdPartyFiles
+            src: _.filter thirdPartyFiles, (filePath) -> return filePath.slice(-3) is ".js"
             dest: config.options.compilePaths.js + scriptsConfig["third"].dest        
           }]
 
