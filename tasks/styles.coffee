@@ -100,7 +100,12 @@ module.exports = (grunt) ->
     if config.options.buildCore
       logosPath = config.options.compilePaths.css + "../shared/dr-logos.less"
       if not fs.existsSync(logosPath)
-        grunt.fail.warn('An error occured. Could not find logos.less at ' + logosPath + ' . This type of build is only for global-assets.')
+        grunt.fail.warn('An error occured. Could not find dr-logos.less at ' + logosPath + ' . This type of build is only for global-assets.')
+
+      iconsPath = config.options.compilePaths.css + "../shared/dr-icons.less"
+      if not fs.existsSync(iconsPath)
+        grunt.fail.warn('An error occured. Could not find dr-icons.less at ' + iconsPath + ' . This type of build is only for global-assets.')
+
       runTasks.push("bootstrap-core", "dr-core")
 
     if config.options.includeBuildFiles
