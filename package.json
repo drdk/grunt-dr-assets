@@ -1,6 +1,6 @@
 {
   "name": "grunt-dr-assets",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "DR Assets Grunt Task",
   "private": true,
   "main": "",
@@ -9,7 +9,7 @@
   },
   "license": "(c) 2014 the Danish Broadcasting Corporation. All rights reserved.",
   "author": "",
-  "peerDependencies": {
+  "dependencies": {
     "grunt-contrib-copy": "^0.5.0",
     "lodash": "^2.4.1",
     "grunt-contrib-clean": "^0.6.0",
@@ -17,10 +17,8 @@
     "assemble-less": "^0.7.0",
     "grunt-contrib-concat": "^0.4.0",
     "dr-webfont-inliner": "~0.2.0",
-    "grunt-contrib-uglify": "~0.4.0"
-  },
-  "dependencies": {
-    "dr-assets": "git://github.com/drdk/dr-assets.git"
+    "grunt-contrib-uglify": "~0.4.0",
+    "dr-assets": "git://github.com/drdk/dr-assets.git#b0e58d5d85ac557c7d3fd65ed88bb2dc723cf04c"
   },
   "readme": "ERROR: No README data found!",
   "devDependencies": {
