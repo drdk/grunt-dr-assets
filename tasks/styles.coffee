@@ -7,19 +7,24 @@ module.exports = (grunt) ->
     # Load libraries
     _  = require('lodash')
     fs = require('fs')
+    path = require('path')
 
     # Set this module path
-    taskPath   = __dirname + "/.."    
+    local_root = path.join(__dirname, "/..")
+
+    # Set modules root paths
+    global_node_modules = path.resolve('node_modules')
+    local_node_modules = path.join(local_root, 'node_modules')
 
     # Reference config settings
     config = grunt.config.get("dr-assets")[@name]
 
     # Set the other default values
-    config.options = _.defaults config.options, 
+    config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
-      drStylesPath        : taskPath + "/node_modules/dr-assets/less"
-      bootstrapPath       : taskPath + "/node_modules/dr-assets/node_modules/bootstrap/less"
+      drStylesPath        : if fs.exists(global_node_modules + "/dr-assets/") then global_node_modules + "/dr-assets/less" else local_node_modules + "/dr-assets/less"
+      bootstrapPath       : local_node_modules + "/bootstrap/less"
       buildMixins         : true
       buildCore           : false
       cleanBeforeBuild    : false
@@ -39,12 +44,12 @@ module.exports = (grunt) ->
       grunt.fail.warn('An error occured. Could not find Bootstrap at ' + config.options.bootstrapPath + ' .')
 
     # Load styles config file
-    stylesConfig = grunt.file.readJSON(taskPath + "/config/styles.json")
-    if not stylesConfig? then grunt.fail.warn('An error occured. Config (' + taskPath + "/config/styles.json" + ') was not found.')
+    stylesConfig = grunt.file.readJSON(local_root + "/config/styles.json")
+    if not stylesConfig? then grunt.fail.warn('An error occured. Config (' + local_root + "/config/styles.json" + ') was not found.')
 
     # Define paths
     if not config.options.compilePaths.css?
-      config.options.compilePaths.css  = config.options.rootPath + "css/" 
+      config.options.compilePaths.css  = config.options.rootPath + "css/"
     else
       config.options.compilePaths.css = config.options.compilePaths.css + "/" if config.options.compilePaths.css.substr(-1) isnt "/"
 
@@ -75,7 +80,7 @@ module.exports = (grunt) ->
       runTasks.push("bootstrap-mixins", "dr-mixins")
     else
       if config.bootstrapComponents? or config.drComponents?
-        grunt.fail.warn('An error occured. Cannot build components when `buildMixins` is false. Set this to true to enable components.') 
+        grunt.fail.warn('An error occured. Cannot build components when `buildMixins` is false. Set this to true to enable components.')
 
     # Add Bootstrap Components
     if config.bootstrapComponents? and _.isArray(config.bootstrapComponents) and config.bootstrapComponents.length > 0
@@ -137,7 +142,7 @@ module.exports = (grunt) ->
           cwd     : config.options.drStylesPath + stylesConfig["dr-mixins"].cwd
           src     : drMixinFiles
           dest    : config.options.compilePaths.less + stylesConfig["dr-mixins"].dest
-    
+
         "dr-components":
           nonull  : true
           expand  : true
@@ -159,13 +164,13 @@ module.exports = (grunt) ->
 
       "dr-styles-less":
         "bootstrap-components":
-          options: 
+          options:
             ieCompat: true
             strictMath: true
             sourceMap: config.options.sourceMap
             cleancss: config.options.compress
             paths: [config.options.compilePaths.less]
-            imports: 
+            imports:
               reference: ["dr/variables.less", "bootstrap/mixins.less"]
           files: [
             expand: true
@@ -176,13 +181,13 @@ module.exports = (grunt) ->
           ]
 
         "dr-components":
-          options: 
+          options:
             ieCompat: true
             strictMath: true
             sourceMap: config.options.sourceMap
             cleancss: config.options.compress
             paths: [config.options.compilePaths.less]
-            imports: 
+            imports:
               reference: ["dr/variables.less", "bootstrap/mixins.less", "dr/mixins.less"]
           files: [
             expand: true
@@ -251,7 +256,7 @@ module.exports = (grunt) ->
             dest: config.options.compilePaths.css + stylesConfig["dr-core"].compile.dest
           ]
 
-      "dr-styles-clean": 
+      "dr-styles-clean":
         all: [config.options.compilePath + "**/*", "!" + config.options.compilePath + "**/README"]
         temp: [tempPath]
 
@@ -261,7 +266,7 @@ module.exports = (grunt) ->
       componentSrcFiles = []
       componentSrcFiles.push tempPath + stylesConfig[subtask].dest + componentFile for componentFile in componentFiles
       taskConfigs["dr-styles-less"][subtask].files[config.options.compilePaths.css + stylesConfig[subtask].compile.dest + '/' + subtask + '.css'] = componentSrcFiles
-  
+
     grunt.registerTask "inline-webfonts", "Inline webfonts in stylesheets", ->
         inline = require("dr-webfont-inliner")
         ["woff", "ttf", "svg"].forEach (type) ->
@@ -290,12 +295,12 @@ module.exports = (grunt) ->
       copyTasks         = []
       compileTasks      = []
       resortTasks       = []
-    
+
       for name, settings of taskConfigs
         grunt.config.set name, settings
 
       if config.options.cleanBeforeBuild
-        grunt.task.run("dr-styles-clean:all") 
+        grunt.task.run("dr-styles-clean:all")
 
       for task in runTasks
         # Run copy tasks
@@ -305,10 +310,10 @@ module.exports = (grunt) ->
         if stylesConfig[task].compile isnt false
           compileTasks.push "dr-styles-less:" + task
           resortTasks.push "dr-styles-csscomb:" + task
-      
-      grunt.task.run(copyTasks) 
-      grunt.task.run(compileTasks) 
-      grunt.task.run(resortTasks) 
+
+      grunt.task.run(copyTasks)
+      grunt.task.run(compileTasks)
+      grunt.task.run(resortTasks)
 
       if config.options.buildCore
         grunt.task.run("dr-styles-less:dr-fonts")
