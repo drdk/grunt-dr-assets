@@ -7,9 +7,13 @@ module.exports = (grunt) ->
     # Load libraries
     _  = require('lodash')
     fs = require('fs')
+    path = require('path')
 
     # Set this module path
-    taskPath   = __dirname + "/.."    
+    local_root = path.join(__dirname, "/..")
+
+    # Set modules root paths
+    node_modules = path.resolve('node_modules')
 
     # Reference config settings
     config = grunt.config.get("dr-assets")[@name]
@@ -18,7 +22,7 @@ module.exports = (grunt) ->
     config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
-      drScriptsPath       : taskPath + "/node_modules/dr-assets/js"
+      drScriptsPath       : path.join(node_modules, "dr-assets", "js")
       buildCore           : false
       cleanBeforeBuild    : false
       sourceMap           : false
@@ -32,13 +36,13 @@ module.exports = (grunt) ->
       grunt.fail.warn('An error occured. Could not find DR Assets at ' + config.options.drScriptsPath + ' .')
 
     # Load styles config file
-    scriptsConfigPath = taskPath + "/config/scripts.json"
+    scriptsConfigPath = local_root + "/config/scripts.json"
     scriptsConfig = grunt.file.readJSON(scriptsConfigPath)
     if not scriptsConfig? then grunt.fail.warn('An error occured. Config (' + scriptsConfigPath + ') was not found.')
 
     # Define paths
     if not config.options.compilePaths.js?
-      config.options.compilePaths.js  = config.options.rootPath + "js/" 
+      config.options.compilePaths.js  = config.options.rootPath + "js/"
     else
       config.options.compilePaths.js = config.options.compilePaths.js + "/" if config.options.compilePaths.js.substr(-1) isnt "/"
 
@@ -115,9 +119,9 @@ module.exports = (grunt) ->
             sourceMap: config.options.sourceMap
           files: [{
             expand: true
-            cwd: tempPath + scriptsConfig["dr-components"].cwd  
+            cwd: tempPath + scriptsConfig["dr-components"].cwd
             src: drComponentFiles
-            dest: config.options.compilePaths.js + scriptsConfig["dr-components"].dest        
+            dest: config.options.compilePaths.js + scriptsConfig["dr-components"].dest
           }]
 
         "third":
@@ -128,10 +132,10 @@ module.exports = (grunt) ->
             expand: true
             cwd: config.options.compilePaths.js
             src: _.filter thirdPartyFiles, (filePath) -> return filePath.slice(-3) is ".js"
-            dest: config.options.compilePaths.js + scriptsConfig["third"].dest        
+            dest: config.options.compilePaths.js + scriptsConfig["third"].dest
           }]
 
-      "dr-scripts-clean": 
+      "dr-scripts-clean":
         all: [config.options.compilePaths.js + "**/*", "!" + config.options.compilePaths.js + "**/README"]
         temp: [tempPath]
 
@@ -174,7 +178,7 @@ module.exports = (grunt) ->
     if runTasks.length > 0
       copyTasks         = []
       compileTasks      = []
-    
+
       for name, settings of taskConfigs
         grunt.config.set name, settings
 
@@ -192,14 +196,14 @@ module.exports = (grunt) ->
         if task is "dr-core"
           taskConfigs["dr-scripts-copy"]["dr-core"].src = processCoreFiles(drCoreFiles)
           compileTasks.push "dr-scripts-uglify:dr-core"
-        
+
         if task is "third"
           compileTasks.push "dr-scripts-uglify:third"
 
         # Run copy tasks
         copyTasks.push "dr-scripts-copy:" + task
-        
-      grunt.task.run(copyTasks) 
+
+      grunt.task.run(copyTasks)
 
       grunt.task.run(compileTasks)
 
