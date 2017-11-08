@@ -13,8 +13,7 @@ module.exports = (grunt) ->
     local_root = path.join(__dirname, "/..")
 
     # Set modules root paths
-    global_node_modules = path.resolve('node_modules')
-    local_node_modules = path.join(local_root, 'node_modules')
+    node_modules = path.resolve('node_modules')
 
     # Reference config settings
     config = grunt.config.get("dr-assets")[@name]
@@ -23,8 +22,8 @@ module.exports = (grunt) ->
     config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
-      drStylesPath        : if fs.exists(global_node_modules + "/dr-assets/") then global_node_modules + "/dr-assets/less" else local_node_modules + "/dr-assets/less"
-      bootstrapPath       : local_node_modules + "/bootstrap/less"
+      drStylesPath        : path.join(node_modules, "dr-assets", "less")
+      bootstrapPath       : path.join(node_modules, "dr-assets", "node_modules", "bootstrap", "less")
       buildMixins         : true
       buildCore           : false
       cleanBeforeBuild    : false
