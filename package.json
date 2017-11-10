@@ -18,7 +18,7 @@
     "grunt-contrib-concat": "^0.4.0",
     "dr-webfont-inliner": "~0.2.0",
     "grunt-contrib-uglify": "~0.4.0",
-    "dr-assets": "drdk/dr-assets.git#3984ff9e6bce9cfbefcab2145fa569253a41a968"
+    "dr-assets": "drdk/dr-assets.git#1db76aad8597de6fe71e7fee4911bb4a608eeb7c"
   },
   "readme": "ERROR: No README data found!",
   "devDependencies": {}
