@@ -12,9 +12,6 @@ module.exports = (grunt) ->
     # Set this module path
     local_root = path.join(__dirname, "/..")
 
-    # Set modules root paths
-    node_modules = path.resolve('node_modules')
-
     # Reference config settings
     config = grunt.config.get("dr-assets")[@name]
 
@@ -22,8 +19,8 @@ module.exports = (grunt) ->
     config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
-      drStylesPath        : path.join(require.resolve("dr-assets"), "less")
-      bootstrapPath       : path.join(require.resolve("bootstrap"), "less")
+      drStylesPath        : path.resolve(require.resolve("dr-assets"), "../less")
+      bootstrapPath       : path.resolve(require.resolve("bootstrap"), "../less")
       buildMixins         : true
       buildCore           : false
       cleanBeforeBuild    : false

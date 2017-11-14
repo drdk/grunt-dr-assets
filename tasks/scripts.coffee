@@ -12,9 +12,6 @@ module.exports = (grunt) ->
     # Set this module path
     local_root = path.join(__dirname, "/..")
 
-    # Set modules root paths
-    node_modules = path.resolve('node_modules')
-
     # Reference config settings
     config = grunt.config.get("dr-assets")[@name]
 
@@ -22,7 +19,7 @@ module.exports = (grunt) ->
     config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
-      drScriptsPath       : path.join(require.resolve("dr-assets"), "js")
+      drScriptsPath       : path.resolve(require.resolve("dr-assets"), "../js")
       buildCore           : false
       cleanBeforeBuild    : false
       sourceMap           : false
