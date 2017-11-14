@@ -3,7 +3,7 @@
   "version": "1.3.2",
   "description": "DR Assets Grunt Task",
   "private": true,
-  "main": "",
+  "main": "Gruntfile.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +11,7 @@
   "author": "",
   "dependencies": {
     "assemble-less": "^0.7.0",
-    "dr-assets": "github:drdk/dr-assets#0.1.2",
+    "dr-assets": "github:drdk/dr-assets#0.1.3",
     "dr-webfont-inliner": "~0.2.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.4.0",
