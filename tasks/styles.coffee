@@ -23,7 +23,7 @@ module.exports = (grunt) ->
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
       drStylesPath        : path.join(node_modules, "dr-assets", "less")
-      bootstrapPath       : path.join(node_modules, "dr-assets", "node_modules", "bootstrap", "less")
+      bootstrapPath       : path.join(node_modules, "bootstrap", "less")
       buildMixins         : true
       buildCore           : false
       cleanBeforeBuild    : false
