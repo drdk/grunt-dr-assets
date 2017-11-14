@@ -22,7 +22,7 @@ module.exports = (grunt) ->
     config.options = _.defaults config.options,
       tempPath            : config.options.rootPath + "dr-assets-tmp/"
       compilePaths        : {}
-      drScriptsPath       : path.join(node_modules, "dr-assets", "js")
+      drScriptsPath       : path.join(require.resolve("dr-assets"), "js")
       buildCore           : false
       cleanBeforeBuild    : false
       sourceMap           : false

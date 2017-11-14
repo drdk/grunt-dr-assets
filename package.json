@@ -1,6 +1,6 @@
 {
   "name": "grunt-dr-assets",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "DR Assets Grunt Task",
   "private": true,
   "main": "Gruntfile.coffee",
