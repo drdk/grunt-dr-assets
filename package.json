@@ -1,6 +1,6 @@
 {
   "name": "grunt-dr-assets",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "DR Assets Grunt Task",
   "private": true,
   "main": "Gruntfile.coffee",
@@ -11,7 +11,7 @@
   "author": "",
   "dependencies": {
     "assemble-less": "^0.7.0",
-    "dr-assets": "github:drdk/dr-assets#71b2a1861112af5f2cf06df5f74f4d2e60197fb4",
+    "dr-assets": "github:drdk/dr-assets#0.1.5",
     "dr-webfont-inliner": "~0.2.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.4.0",
