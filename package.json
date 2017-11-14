@@ -11,7 +11,7 @@
   "author": "",
   "dependencies": {
     "assemble-less": "^0.7.0",
-    "dr-assets": "github:drdk/dr-assets#0bfd7bcfa1bd07924d24bfe7292735aadae4d14a",
+    "dr-assets": "github:drdk/dr-assets#71b2a1861112af5f2cf06df5f74f4d2e60197fb4",
     "dr-webfont-inliner": "~0.2.0",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-concat": "^0.4.0",
