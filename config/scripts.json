@@ -24,7 +24,7 @@
       "third/require/require.js",
       "third/modernizr/modernizr.js",
       "components/core.js",
-      "third/jquery/jquery-1.11.0.js"
+      "third/jquery/jquery-3.3.1.js"
     ],
     "dest": "/"
   },
